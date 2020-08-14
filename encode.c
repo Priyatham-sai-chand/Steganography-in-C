@@ -87,26 +87,23 @@ struct PPM * encoder(struct PPM * img, char * message,unsigned int secret,int n)
         for(int j = n -1; j >= 0;j--)
         {
             
-            if(k > 8*mSize)break;
-            else
-            {
                 red->bin[7-j]  = msg_bin[k];
+                
                 k++;
                 
-            }
+            
             
             
         }
         for(int j = n -1; j >= 0;j--)
         {
             
-            if(k > 8*mSize)break;
-            else
-            {
+            
                 green->bin[7-j]  = msg_bin[k];
+               
                 k++;
                 
-            }
+            
             
             
         }
@@ -116,6 +113,7 @@ struct PPM * encoder(struct PPM * img, char * message,unsigned int secret,int n)
             else
             {
                 blue->bin[7-j]  = msg_bin[k];
+                
                 k++;
                 
             }
@@ -124,25 +122,14 @@ struct PPM * encoder(struct PPM * img, char * message,unsigned int secret,int n)
         p->r = bind2dec(red);
         p->g = bind2dec(green);
         p->b = bind2dec(blue);
-        //img ->p[row][column] = &p;
+        
         
         
     }
-    for(int s = 0; s < 8*mSize; s++)
-        {
-            printf("%d",msg_bin[s]);
-            
-            
-            
-            
-        }
-       
+
         
         return img;
-    
-    
-    
-    
+   
 }
     
 
@@ -152,7 +139,7 @@ char * decode(struct PPM * img, unsigned int secret,int n,int mSize)
     srand(secret);
     int width,rando,sum = 0,row,column,i = 0,k = 0,p = 0;
     int no_of_pixels = (int)ceil(mSize*8/(3*n));
-    int buffer[8*mSize];
+    char * buffer = malloc(sizeof(char) * 8 * mSize);
     
     while(i <= no_of_pixels)
     {
@@ -162,7 +149,7 @@ char * decode(struct PPM * img, unsigned int secret,int n,int mSize)
         row = sum / (width);
         
         column = sum - (row * width);
-        printf("%d %d\n",row,column);
+        
         //get pixel
         struct pixel * p = &(img->p[row][column]);
         struct conv * red = dec2bind(p->r);
@@ -173,6 +160,7 @@ char * decode(struct PPM * img, unsigned int secret,int n,int mSize)
         {
             
             buffer[k] =red->bin[7-j];
+            
             k++;
             
             
@@ -181,6 +169,7 @@ char * decode(struct PPM * img, unsigned int secret,int n,int mSize)
         {
             
             buffer[k] =green->bin[7-j];
+            
             k++;
             
             
@@ -189,6 +178,7 @@ char * decode(struct PPM * img, unsigned int secret,int n,int mSize)
         {
             
             buffer[k] =blue->bin[7-j];
+            
             k++;
             
             
@@ -196,32 +186,39 @@ char * decode(struct PPM * img, unsigned int secret,int n,int mSize)
         
       
     }
-    for(int s = 0; s < 8*mSize; s++)
-    {
-        
-        printf("%d",buffer[s]);
-        
-    }
-    
-
 
     struct conv * msg_bin[mSize];
     int msg_no[mSize];
-    char * str = (char *)malloc(sizeof(char) * mSize);
+    char * str = (char *)malloc(sizeof(char) * 7);
     struct conv * test;
-    int temp[8],temp1;
-    /*for(int r = 0; r < 8; r++)
+    int temp[8],t = 0;
+    int temp1[mSize];
+    for(int r = 0; r < mSize; r++)
     {
-        temp[r] = buffer[r];
+        for(int s = 0; s < 8; s++)
+        {
+            temp[s] = buffer[t];
+            t++;
+        
+        
+        }
+        temp1[r] = bind2dectest(temp);
         
         
         
     }
     
-    temp1 = bind2dec1(temp);
-    printf("%d",temp1);*/
+    for(int u = 0;u < 9; u++)
+    {
+        
+        str[u] = temp1[u];
+        
+        
+    }
+    
+    
 
-	return "asdf";
+	return str;
 
 }
 

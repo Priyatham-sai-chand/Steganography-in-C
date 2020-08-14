@@ -10,11 +10,11 @@ int main(int argc, char ** argv)
 
     else
     {
-        FILE * fin = fopen(argv[2], "r");
+/*        FILE * fin = fopen(argv[2], "r");
         struct PPM * img = getPPM(fin);
-        showPPM(img);
-        //if(argv[1][0] == 'e')encodeFile(argc,argv);
-        //if(argv[1][0] == 'd')decodeFile(argc,argv);
+        showPPM(img);*/
+        if(argv[1][0] == 'e')encodeFile(argc,argv);
+        if(argv[1][0] == 'd')decodeFile(argc,argv);
         
         
     }
@@ -25,20 +25,19 @@ int main(int argc, char ** argv)
 void showPPM (struct PPM * img){
 
         //print type
-        printf("%s\n", img->type);
+        printf("%s", img->type);
 
         //print text
         int j;
         struct comment * t = img->comment;
-        printf("%s\n", img->comment->comment);
+        printf("%s", img->comment->comment);
         for(j = 1; j<img->cn; j++){
                 t = t->next;
-                printf("%s\n", t->comment);
+                printf("%s", t->comment);
         }
 
         //print general info
-        printf("%d\n", img->width);
-        printf("%d\n", img->height);
+        printf("%d %d\n", img->width, img->height);
         printf("%d\n", img->max);
 
         //print pixels
@@ -54,14 +53,15 @@ void showPPM (struct PPM * img){
 
 /* Utilizes the above readLine function to find the comments */
 void getText(FILE * fin, struct PPM * img){
-	char ch = fgetc(fin);
+	
+    char ch = fgetc(fin);
 	while(ch == '#') //lines beginning with "#" character
 	{
-        ch = fgetc(fin);
-		//ungetc(ch, fin);
+        
+		ungetc(ch, fin);
 
-/*		//get comment
-		//char * line;
+		//get comment
+		
         
 
 		//add comment to linked list
@@ -69,9 +69,9 @@ void getText(FILE * fin, struct PPM * img){
 		{
 
 			//no previous comments
-            struct comment * current = img->comment;
-			current = (struct comment * )malloc(sizeof(struct comment));
-			fgets(current->comment,100,fin);
+            
+			img->comment = (struct comment * )malloc(sizeof(struct comment));
+			fgets(img->comment->comment,100,fin);
 			img->cn = 1;
 		}
 		else
@@ -79,15 +79,15 @@ void getText(FILE * fin, struct PPM * img){
 			//previous comments
 			int j;
 			struct comment * current = img->comment;
-
+            
 			for(j=1;j<img->cn;j++)
             {
                 current = current->next;
-                current->next = (struct comment *)malloc(sizeof(struct comment));
-                fgets(current->next->comment,100,fin);
+                
             }
-				
-			 
+			current->next = (struct comment *)malloc(sizeof(struct comment));
+            fgets(current->next->comment,100,fin);	
+            
 			img->cn = img->cn + 1;
 		}
 
@@ -96,7 +96,7 @@ void getText(FILE * fin, struct PPM * img){
 	}
 
 	//Restore to starting position
-	ungetc(ch, fin);*/
+	ungetc(ch, fin);
 }
 
 void getPixels(FILE * fin, struct PPM * img){
@@ -123,10 +123,17 @@ void getPixels(FILE * fin, struct PPM * img){
 /* Return PPM image file from fin */
 struct PPM * getPPM(FILE * fin){
         struct PPM * img = malloc(sizeof(struct PPM));
-        
+        char ch;
         //Type
-        img->type = malloc(2*sizeof(char));
-        img->type = "P3";
+        ch = fgetc(fin);
+        img->type = malloc(4*sizeof(char));
+        if( ch == 'P')
+        {
+            ungetc(ch, fin);
+            fgets(img->type,4,fin);
+            
+            
+        }
 
         img->cn = 0;
         getText(fin, img);
@@ -157,7 +164,7 @@ void writePPM(FILE * fin, struct PPM * img, const char *fileName){
 	fclose(pfile);
 }
 void encodeFile(int argc, char ** argv){
-	char txt[PPM_MAXMESS];
+	char txt[PPM_MAXMESS],secret[PPM_MAXMESS];
 	int n;
     FILE * fin = fopen(argv[2], "r");
 	if(fin == NULL){
@@ -169,16 +176,16 @@ void encodeFile(int argc, char ** argv){
 
 	//get txt
 	printf("Message to Encode-> ");
-	fgets(txt, PPM_MAXMESS, stdin);
-    printf("Enter no. of LSBs ( 3 to 21)");
+	gets(txt);
+    printf("Enter no. of LSBs ( 3 to 21)]-> ");
     scanf("%d",&n);
-	
+	printf("Enter secret message -> ");
+    gets(secret);
 	printf("encoding in progress...\n");
     
 	//encode ppm
 	 img = encoder(img, txt,1234,n);
-    printf("test");
-    showPPM(img);
+
 	//output ppm
 	//fputc(showPPM, outFin);
 	writePPM(fin, img, "modified.ppm");
@@ -201,8 +208,9 @@ void decodeFile(int argc, char ** argv){
 
 	//get encoded txt
 	char * str = decode(img,1234,3,9);
-
+    for(int i = 0 ; i < 9;i++)printf("%c",str[i]); 
+    
 	//print txt
-	printf("%s\n", str);
+	//printf("%s", str);
 }
 

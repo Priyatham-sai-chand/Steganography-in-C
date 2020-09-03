@@ -6,6 +6,7 @@ For more info on the process,
 
 This is my ongoing project to hide messages using a C project and in later stages be able to integrate it to provide a GUI for ease of operation.
 
+Encrytion would require the use of [openssl](https://www.openssl.org/)
 ## To Compile
 
 ```gcc steg -o steg.c encode.c```

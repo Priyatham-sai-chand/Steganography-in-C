@@ -8,4 +8,4 @@ This is my ongoing project to hide messages using a C project and in later stage
 
 ## To Compile
 
-gcc steg -o steg.c encode.c
+```gcc steg -o steg.c encode.c```

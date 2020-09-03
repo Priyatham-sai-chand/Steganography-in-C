@@ -9,3 +9,7 @@ This is my ongoing project to hide messages using a C project and in later stage
 ## To Compile
 
 ```gcc steg -o steg.c encode.c```
+
+with encryption
+
+```gcc steg -o  steg.c encode.c encryption.c -lssl -lcrypto```

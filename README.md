@@ -9,8 +9,8 @@ This is my ongoing project to hide messages using a C project and in later stage
 Encrytion would require the use of [openssl](https://www.openssl.org/)
 ## To Compile
 
-```gcc steg -o steg.c encode.c```
+```gcc steg.c encode.c -o steg```
 
 with encryption
 
-```gcc steg -o  steg.c encode.c encryption.c -lssl -lcrypto```
+```gcc -lssl -lcrypto steg.c encode.c encryption.c -o steg```

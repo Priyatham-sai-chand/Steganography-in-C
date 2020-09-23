@@ -50,27 +50,28 @@ int bind2dectest(int arr[])
 
 struct PPM * encoder(struct PPM * img, char * message,unsigned int secret,int n)
 {
-     int mSize = strlen(message);
-     srand(secret);
+    int mSize = strlen(message);
+    srand(secret);
     int width,rando,sum = 0,row,column,o = 0,i = 0,k = 0,t = 0;
     int no_of_pixels = (int)ceil(mSize*8/(3*n));
     int msg_bin[8*mSize];
     struct conv * msg_char[mSize];
     for(int k = 0; k < mSize; k++) 
     {
-        
-        msg_char[k] = dec2bind(message[k]);
-        for(int m = 0; m < 8; m++)
-        {
+       
+            msg_char[k] = dec2bind(message[k]);
+            for(int m = 0; m < 8; m++)
+            {
             
-            msg_bin[o] = msg_char[k]->bin[m]; 
-            o++;
+                msg_bin[o] = msg_char[k]->bin[m]; 
+                o++;
             
             
-        }
-        
+            }
+       
     }
     
+
     while( i <= no_of_pixels)
     {
         rando = rand()%100;
@@ -208,7 +209,7 @@ char * decode(struct PPM * img, unsigned int secret,int n,int mSize)
         
     }
     
-    for(int u = 0;u < 9; u++)
+    for(int u = 0;u < mSize; u++)
     {
         
         str[u] = temp1[u];

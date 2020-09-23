@@ -65,3 +65,12 @@ char * decode(struct PPM * img, unsigned int secret,int n,int mSize);
 void encodeFile(int argc, char ** argv);
 
 void decodeFile(int argc, char  ** argv);
+char * encrypter(char * plaintext);
+
+char * decrypter(char * ciphertext);
+
+int encrypt(unsigned char *plaintext, int plaintext_len, unsigned char *key,unsigned char *iv, unsigned char *ciphertext);
+
+int decrypt(unsigned char *ciphertext, int ciphertext_len, unsigned char *key,unsigned char *iv, unsigned char *plaintext);
+
+void handleErrors(void);

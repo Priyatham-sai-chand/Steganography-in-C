@@ -2,6 +2,7 @@
 #include <openssl/evp.h>
 #include <openssl/err.h>
 #include <string.h>
+#include <openssl/applink.c>
 #include "ppm.h"
 int main (void)
 {

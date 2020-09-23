@@ -1,4 +1,5 @@
 #include "ppm.h"
+
 int main(int argc, char ** argv)
 {
     
@@ -144,7 +145,7 @@ struct PPM * getPPM(FILE * fin){
         fscanf (fin, "%d", &img->max);
 
         //Pixels
-        getPixels(fin, img);
+        //getPixels(fin, img);
 
         return img;
 }
@@ -154,7 +155,7 @@ void writePPM(FILE * fin, struct PPM * img, const char *fileName){
 
 	pfile = fopen(fileName, "w");
 	//fprintf(pfile, "%d\n %s\n %d %d\n %d\n", i->type, i->text, i->w, i->h, i->max);
-	fprintf(pfile, "P3\n%s%d %d\n255\n",img->comment,img->width, img->height);
+	fprintf(pfile, "P3\n%s%d %d\n255\n",img->comment->comment,img->width, img->height);
 
 	for(x=0; x<img->height; x++) {
 		for(y=0; y<img->width;y++){
@@ -164,7 +165,7 @@ void writePPM(FILE * fin, struct PPM * img, const char *fileName){
 	fclose(pfile);
 }
 void encodeFile(int argc, char ** argv){
-	char txt[PPM_MAXMESS],secret[PPM_MAXMESS];
+	char txt[PPM_MAXMESS],secret[PPM_MAXMESS],c;
 	int n;
     FILE * fin = fopen(argv[2], "r");
 	if(fin == NULL){
@@ -175,19 +176,27 @@ void encodeFile(int argc, char ** argv){
 	struct PPM * img = getPPM(fin);
 
 	//get txt
-	printf("Message to Encode-> ");
-	gets(txt);
-    printf("Enter no. of LSBs ( 3 to 21)]-> ");
+	printf("Message to Encode -> ");
+	scanf( "%100[^\n]", txt);
+    printf("Enter no. of LSBs ( 3 to 21)] -> ");
     scanf("%d",&n);
+    /* discard */ 
+    while((c= getchar()) != '\n' && c != EOF);
 	printf("Enter secret message -> ");
-    gets(secret);
-	printf("encoding in progress...\n");
+    scanf( "%100[^\n]", secret);
+    printf("encoding in progress...\n");
     
-	//encode ppm
-	 img = encoder(img, txt,1234,n);
+    int len = strlen(txt);
+    
+    char msg_secret[100];
+    
+    //showPPM(img);
+    
+	encode ppm
+	 img = encoder(img,txt,msg_secret,n);
 
 	//output ppm
-	//fputc(showPPM, outFin);
+	fputc(showPPM, outFin);
 	writePPM(fin, img, "modified.ppm");
 	
 }
@@ -201,16 +210,19 @@ void decodeFile(int argc, char ** argv){
 		printf("steg: Error - File '%s' could not be opened. \n", argv[2]);
 		exit(0);
 	}
+	char[100] secret;
+	printf("enter the message");
+	scanf("%s");
 
 	//get files
 	struct PPM * img = getPPM(i1);
 	
-
+    
 	//get encoded txt
 	char * str = decode(img,1234,3,9);
+    //char * decrypt_txt = decrypter(str);
     for(int i = 0 ; i < 9;i++)printf("%c",str[i]); 
     
 	//print txt
-	//printf("%s", str);
+	
 }
-
